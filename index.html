@@ -1,18 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="GenAI Lab: a hands-on course in AI, machine learning and generative AI.">
+<meta name="theme-color" content="#0F766E">
 <title>GenAI Lab</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout concept: one-column phone app. Sticky header carries a seven-layer progress stack, content switches by tab, tab bar sits at the bottom. */
 :root{
-  --bg:#F2F4F8;
+  --bg:#F3F5F4;
   --surface:#FFFFFF;
-  --surface2:#E7EBF3;
-  --line:#D3D9E5;
+  --surface2:#E6ECEA;
+  --line:#D3DBD8;
   --fg:#141A26;
   --muted:#586479;
-  --accent:#2B50E6;
+  --accent:#0F766E;
   --accent-fg:#FFFFFF;
-  --accent-soft:#E2E8FF;
+  --accent-soft:#D8F0EC;
   --ok:#177A4B;
   --warn:#C2410C;
   --warn-soft:#FDE9DD;
@@ -24,13 +30,13 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0E131C;--surface:#161C28;--surface2:#212A3B;--line:#2B3548;--fg:#E7ECF5;--muted:#9AA6BB;
-    --accent:#86A0FF;--accent-fg:#0E131C;--accent-soft:#1B2646;--ok:#5FD09A;--warn:#FF9A62;--warn-soft:#3A2418;--ok-soft:#14302A;
+    --accent:#5FD3C2;--accent-fg:#0E131C;--accent-soft:#12312E;--ok:#5FD09A;--warn:#FF9A62;--warn-soft:#3A2418;--ok-soft:#14302A;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0E131C;--surface:#161C28;--surface2:#212A3B;--line:#2B3548;--fg:#E7ECF5;--muted:#9AA6BB;
-  --accent:#86A0FF;--accent-fg:#0E131C;--accent-soft:#1B2646;--ok:#5FD09A;--warn:#FF9A62;--warn-soft:#3A2418;--ok-soft:#14302A;
+  --accent:#5FD3C2;--accent-fg:#0E131C;--accent-soft:#12312E;--ok:#5FD09A;--warn:#FF9A62;--warn-soft:#3A2418;--ok-soft:#14302A;
   color-scheme:dark;
 }
 *{box-sizing:border-box}
@@ -48,7 +54,7 @@ a{color:inherit}
 .top-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 h1{font:700 22px/1.1 var(--font-display);letter-spacing:-.01em;margin:0}
 .ghost{background:none;border:1px solid var(--line);border-radius:6px;padding:6px 10px;min-height:34px;font:500 12px var(--font-mono);cursor:pointer;color:var(--muted)}
-.stack{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:12px}
+.stack{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;margin-top:12px}
 .seg{display:flex;flex-direction:column;gap:3px;min-width:0}
 .bar-track{height:6px;background:var(--surface2);border-radius:2px;overflow:hidden}
 .bar-track i{display:block;height:100%;background:var(--accent)}
@@ -354,6 +360,45 @@ button.next{width:100%;text-align:left;cursor:pointer;font:inherit;color:var(--f
 .tabbtn{flex:1;min-height:54px;background:none;border:0;font:500 13px var(--font-body);color:var(--muted);cursor:pointer;box-shadow:inset 0 2px 0 transparent}
 .tabbtn[aria-current="page"]{color:var(--accent);box-shadow:inset 0 2px 0 var(--accent)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+
+
+/* design pass */
+h2{font-family:var(--font-display);letter-spacing:-.01em}
+.card,.next,.lrow{transition:border-color .15s,box-shadow .15s,transform .15s}
+.card{border-radius:12px;box-shadow:0 1px 2px rgba(20,26,38,.04)}
+.next{border-radius:12px}
+.hero{position:relative;overflow:hidden;border-radius:16px;padding:22px 20px;margin-bottom:20px;color:#fff;background:linear-gradient(135deg,#0A3F3B 0%,#0F766E 58%,#2FA394 100%)}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+.hero .eyebrow{margin:0 0 6px;font:500 11px var(--font-mono);letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.hero h2{margin:0 0 8px;font-size:24px;line-height:1.15;color:#fff;position:relative}
+.hero p{margin:0;max-width:56ch;font-size:14px;opacity:.92;position:relative}
+.hstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px;position:relative}
+.hstats div{background:rgba(255,255,255,.14);border-radius:10px;padding:10px 8px;text-align:center}
+.hstats b{display:block;font:700 20px var(--font-display)}
+.hstats span{font-size:11px;opacity:.85}
+h2.sec{font-size:20px;margin:0 0 6px}
+.tabbtn .ti{display:block;margin:0 auto 2px}
+@media (min-width:768px){
+  body{padding-left:232px}
+  .bar{top:0;bottom:0;right:auto;width:232px;border-top:0;border-right:1px solid var(--line);padding:24px 12px;overflow-y:auto}
+  .bar::before{content:"GenAI Lab";display:block;font:700 22px/1.1 var(--font-display);letter-spacing:-.01em;padding:4px 12px 22px;color:var(--fg)}
+  .bar .gutter{flex-direction:column;max-width:none;padding:0;gap:4px;margin:0}
+  .tabbtn{flex:none;min-height:44px;display:flex;align-items:center;gap:12px;text-align:left;padding:0 14px;border-radius:10px;box-shadow:none;font-size:14px}
+  .tabbtn .ti{margin:0}
+  .tabbtn:hover{background:var(--surface2)}
+  .tabbtn[aria-current="page"]{background:var(--accent-soft);box-shadow:none}
+  .top h1{display:none}
+  .top-row{justify-content:flex-end}
+  .gutter{max-width:880px;padding-left:40px;padding-right:40px}
+  main{padding-block:28px 64px}
+  .hero{padding:32px 32px}
+  .hero h2{font-size:34px}
+  .hero p{font-size:16px}
+  .hstats b{font-size:26px}
+  .card:hover,.lrow:hover{border-color:var(--accent)}
+  .card:hover{box-shadow:0 6px 18px rgba(20,26,38,.08)}
+}
+@media (min-width:1400px){.gutter{max-width:980px}}
 </style>
 
 <header class="top">
@@ -6113,6 +6158,7 @@ delete PLAN[8];
 })();
 /*COURSE:END*/
 
+var TABICON={path:'<path d="M4 19c4 0 4-14 8-14s4 14 8 14"/><circle cx="4" cy="19" r="1.2"/><circle cx="20" cy="19" r="1.2"/>',projects:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/>',teach:'<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"/>',library:'<path d="M5 4h5v16H5zM10 4h5v16h-5z"/><path d="M15.5 5l4 1-3.5 14-4-1"/>'};
 var TABS=[["path","Path"],["projects","Projects"],["teach","Teach"],["library","Library"]];
 var KEY="genailab:v1";
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
@@ -6176,7 +6222,7 @@ function renderStat(){
   var d=0,n=0,cur=null;
   LAYERS.forEach(function(l){var c=count(l);d+=c.d;n+=c.n;if(!cur&&c.d<c.n)cur=l;});
   var pd=0,pn=0;PROJECTS.forEach(function(p){var c=pcount(p);pd+=c.d;pn+=c.n;});
-  document.getElementById("stat").textContent=(cur?"Layer "+cur.id+" of 7":"All 7 layers done")+" · "+d+" of "+n+" lessons and topics · "+pd+" of "+pn+" project steps";
+  document.getElementById("stat").textContent=(cur?"Layer "+cur.id+" of "+LAYERS.length:"All "+LAYERS.length+" layers done")+" · "+d+" of "+n+" lessons and topics · "+pd+" of "+pn+" project steps";
 }
 function nextHTML(){
   var u=nextUp();
@@ -6221,7 +6267,9 @@ function layerHTML(l,open){
 }
 function pathHTML(){
   var first=null;LAYERS.forEach(function(l){var c=count(l);if(!first&&c.d<c.n)first=l;});
-  return '<h2>Learning path</h2><p class="lede">Eight layers, each building on the last. Layers 1 to 7 are the core course; Layer 8 is optional and goes deeper into the maths, training and research habits. Every layer has modules, quizzes and a capstone.</p>'+
+  var tl=0,td=0;LAYERS.forEach(function(l){var c=count(l);tl+=c.n;td+=c.d;});
+  var hero='<section class="hero"><p class="eyebrow">Learn AI by building it</p><h2>From first array to your own language model</h2><p>Eight layers of lessons, runnable code, animated diagrams, quizzes and capstone projects. Go at your own pace and break things on purpose.</p><div class="hstats"><div><b>'+LAYERS.length+'</b><span>layers</span></div><div><b>'+Object.keys(LESSONS).length+'</b><span>lessons</span></div><div><b>'+Object.keys(LESSONS).length+'</b><span>visuals</span></div><div><b>'+(tl?Math.round(td/tl*100):0)+'%</b><span>done</span></div></div></section>';
+  return hero+'<h2 class="sec">Learning path</h2><p class="lede">Eight layers, each building on the last. Layers 1 to 7 are the core course; Layer 8 is optional and goes deeper into the maths, training and research habits. Every layer has modules, quizzes and a capstone.</p>'+
     '<div id="next">'+nextHTML()+'</div>'+
     LAYERS.map(function(l){
       var o=S.open[l.id];
@@ -10144,7 +10192,7 @@ function testHTML(n){
 }
 function renderTabs(){
   document.getElementById("tabs").innerHTML=TABS.map(function(t){
-    return '<button type="button" class="tabbtn" data-tab="'+t[0]+'"'+(tab===t[0]?' aria-current="page"':"")+'>'+t[1]+'</button>';
+    return '<button type="button" class="tabbtn" data-tab="'+t[0]+'"'+(tab===t[0]?' aria-current="page"':"")+'><svg class="ti" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(TABICON[t[0]]||"")+'</svg><span>'+t[1]+'</span></button>';
   }).join("");
 }
 function renderView(){
@@ -10238,3 +10286,6 @@ if(TABS.some(function(t){return t[0]===h;}))tab=h;
 themeLabel();renderStack();renderStat();renderView();
 })();
 </script>
+
+</body>
+</html>
