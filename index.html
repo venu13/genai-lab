@@ -447,6 +447,44 @@ table.arr th{background:var(--surface2);color:var(--muted);font-weight:500}
   body.side-min .gutter{max-width:1040px}
 }
 @media (min-width:768px) and (prefers-reduced-motion:reduce){body,.bar,.side-toggle svg{transition:none}}
+
+/* navigation redesign */
+.lgrid{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:24px}
+.lcard{text-align:left;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;font:inherit;color:var(--fg);transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden}
+.lcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--line)}
+.lcard.cur{border-color:var(--accent)}.lcard.cur::before{background:var(--accent)}
+.lc-top{display:flex;align-items:center;justify-content:space-between}
+.lc-num{font:700 26px/1 var(--font-display);color:var(--accent)}
+.lc-st{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.lc-st.lc-opt{background:var(--surface2);color:var(--muted)}
+.lcard h3{margin:2px 0 0;font:600 18px/1.2 var(--font-display)}
+.lc-out{margin:0;font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.lc-meta{margin:2px 0 4px;font:400 12px var(--font-mono);color:var(--muted)}
+.lc-bar,.lh-bar{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.lc-bar i,.lh-bar i{display:block;height:100%;background:var(--ok);transition:width .4s}
+.lhead{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.lh-top{display:flex;gap:14px;align-items:center}
+.lh-num{font:700 40px/1 var(--font-display);color:var(--accent)}
+.lhead h2{margin:0;font-size:24px;line-height:1.1}
+.lhead .lh-opt{font:500 11px var(--font-mono);letter-spacing:.06em;text-transform:uppercase;vertical-align:middle;padding:3px 8px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.lh-meta{margin:4px 0 0;font:400 12px var(--font-mono);color:var(--muted)}
+.lh-out{margin:12px 0;max-width:62ch}
+.lh-pct{margin:6px 0 12px;font:400 12px var(--font-mono);color:var(--muted)}
+.lbody2 .mod{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 12px}
+.lbody2 .mod:first-of-type{padding-top:12px}
+.trail{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;font:500 12px var(--font-mono);color:var(--muted);margin-bottom:6px}
+.trail button{background:none;border:0;padding:8px 0;min-height:36px;color:var(--accent);cursor:pointer;font:inherit}
+.trail button:hover{text-decoration:underline}
+.outl{border:1px solid var(--line);border-radius:10px;background:var(--surface);margin:2px 0 10px;padding:0 12px}
+.outl summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.outl summary small{margin-left:auto;font:400 12px var(--font-mono);color:var(--muted)}
+.orow{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:10px 4px;min-height:44px;cursor:pointer;font-size:14px}
+.orow .dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+.orow.done .dot{background:var(--ok);border-color:var(--ok);color:#fff}
+.orow.cur{font-weight:600;color:var(--accent)}
+.pn{display:flex;justify-content:space-between;gap:8px;margin-bottom:8px}
+.pn .chip:disabled{opacity:.4;cursor:default}
+@media (min-width:768px){.lgrid{grid-template-columns:1fr 1fr}.lcard:hover{border-color:var(--accent);box-shadow:0 8px 22px rgba(20,26,38,.1);transform:translateY(-2px)}.lhead{padding:24px}.lhead h2{font-size:30px}.lh-num{font-size:52px}}
 </style>
 
 <header class="top">
@@ -6340,7 +6378,7 @@ function nextHTML(){
 function resRow(r,extra){
   return '<a class="res" href="'+esc(r.u)+'" target="_blank" rel="noopener noreferrer"><span class="tag">'+r.k+'</span><span class="rt">'+esc(r.t)+'<small>'+esc(r.s)+(extra||"")+'</small></span><span class="ext" aria-hidden="true">↗</span></a>';
 }
-function layerHTML(l,open){
+function layerHTML(l,open,page){
   var c=count(l),body="";
   if(l.modules){
     body=l.modules.map(function(m,mi){
@@ -6366,6 +6404,16 @@ function layerHTML(l,open){
       }).join("");
     }
   }
+  if(page){
+    var u0=null,ids0=l.modules?lessonIds(l):[];for(var q0=0;q0<ids0.length;q0++){if(!S.done[ids0[q0]]){u0=ids0[q0];break;}}
+    var mins=0;ids0.forEach(function(id){mins+=LESSONS[id].min;});
+    return '<button type="button" class="crumb" data-back="1">‹ All layers</button>'+
+      '<section class="lhead"><div class="lh-top"><span class="lh-num">'+(l.id<10?"0":"")+l.id+'</span><div><h2>'+esc(l.name)+(l.id===8?' <span class="lh-opt">optional</span>':'')+'</h2><p class="lh-meta">'+l.wk+(l.modules?' · '+l.modules.length+' modules · '+ids0.length+' lessons · about '+Math.round(mins/60)+' h':'')+'</p></div></div>'+
+      '<p class="lh-out"><b>By the end you can:</b> '+esc(l.out.charAt(0).toLowerCase()+l.out.slice(1))+'</p>'+
+      '<div class="lh-bar"><i style="width:'+pct(c)+'%"></i></div><p class="lh-pct">'+c.d+' of '+c.n+' done ('+pct(c)+'%)</p>'+
+      (u0?'<button type="button" class="bigbtn" data-go="lesson:'+u0+'">'+(c.d?'Continue with ':'Start with ')+u0+' '+esc(LESSONS[u0].title)+'</button>':'')+'</section>'+
+      '<div class="lbody2">'+body+'<div class="sub">Learn from</div>'+l.res.map(function(r){return resRow(r);}).join("")+'</div>';
+  }
   return '<details class="layer" data-layer="'+l.id+'"'+(open?" open":"")+'>'+
     '<summary><span class="lnum">L'+l.id+'</span><span class="lname">'+esc(l.name)+'<span class="lmeta" data-lm="'+l.id+'">'+l.wk+' · '+c.d+'/'+c.n+(l.modules?" lessons":" topics")+'</span></span><span class="chev"></span>'+
     '<div class="lbar"><i data-lb="'+l.id+'" style="width:'+pct(c)+'%"></i></div></summary>'+
@@ -6378,11 +6426,11 @@ function pathHTML(){
   var hero='<section class="hero"><p class="eyebrow">Learn AI by building it</p><h2>From first array to your own language model</h2><p>Eight layers of lessons, runnable code, animated diagrams, quizzes and capstone projects. Go at your own pace and break things on purpose.</p><div class="hstats"><div><b>'+LAYERS.length+'</b><span>layers</span></div><div><b>'+Object.keys(LESSONS).length+'</b><span>lessons</span></div><div><b>'+Object.keys(LESSONS).length+'</b><span>visuals</span></div><div><b>'+(tl?Math.round(td/tl*100):0)+'%</b><span>done</span></div></div></section>';
   return hero+'<h2 class="sec">Learning path</h2><p class="lede">Eight layers, each building on the last. Layers 1 to 7 are the core course; Layer 8 is optional and goes deeper into the maths, training and research habits. Every layer has modules, quizzes and a capstone.</p>'+
     '<div id="next">'+nextHTML()+'</div>'+
-    LAYERS.map(function(l){
-      var o=S.open[l.id];
-      if(o===undefined)o=!!(first&&first.id===l.id);
-      return layerHTML(l,o);
-    }).join("");
+    '<h2 class="sec">Choose a layer</h2><div class="lgrid">'+LAYERS.map(function(l){
+      var c=count(l),ids=l.modules?lessonIds(l):[],mins=0;ids.forEach(function(id){mins+=LESSONS[id].min;});
+      var isNext=first&&first.id===l.id,st=pct(c)>=100?"Done":(c.d?"In progress":(isNext?"Start here":""));
+      return '<button type="button" class="lcard'+(isNext?" cur":"")+'" data-open-layer="'+l.id+'"><div class="lc-top"><span class="lc-num">'+(l.id<10?"0":"")+l.id+'</span>'+(st?'<span class="lc-st">'+st+'</span>':(l.id===8?'<span class="lc-st lc-opt">Optional</span>':''))+'</div><h3>'+esc(l.name)+'</h3><p class="lc-out">'+esc(l.out)+'</p><p class="lc-meta">'+l.wk+(ids.length?' · '+ids.length+' lessons · ~'+Math.round(mins/60)+' h':'')+'</p><div class="lc-bar"><i style="width:'+pct(c)+'%"></i></div></button>';
+    }).join("")+'</div>';
 }
 function projectsHTML(){
   return '<h2>Projects</h2><p class="lede">A capstone for each finished layer, then five builds. Finishing each one gives you something concrete to teach from.</p>'+
@@ -10239,7 +10287,11 @@ function qaRow(c,num){
 function lessonHTML(id){
   var L=LESSONS[id],l=layerOfLesson(id),mi=moduleIndex(l,id),m=l.modules[mi],pos=m.lessons.indexOf(id),d=!!S.done[id];
   var viz=L.viz&&VIZ[L.viz];
-  return '<button type="button" class="crumb" data-back="1">‹ Layer '+l.id+' · '+esc(l.name)+'</button>'+
+  var lids=lessonIds(l),li=lids.indexOf(id),pv=li>0?lids[li-1]:null,nx=li<lids.length-1?lids[li+1]:null;
+  var outline='<details class="outl"><summary>In this module: '+esc(m.name)+' <small>'+m.lessons.filter(function(x){return S.done[x];}).length+'/'+m.lessons.length+' done</small></summary>'+m.lessons.map(function(x){return '<button type="button" class="orow'+(x===id?" cur":"")+(S.done[x]?" done":"")+'" data-lesson="'+x+'"><span class="dot">'+(S.done[x]?"✓":"")+'</span><span>'+esc(LESSONS[x].title)+'</span></button>';}).join("")+'</details>';
+  var pn='<div class="pn"><button type="button" class="chip" data-lesson="'+(pv||"")+'"'+(pv?"":" disabled")+'>‹ Previous</button><button type="button" class="chip" data-lesson="'+(nx||"")+'"'+(nx?"":" disabled")+'>Next lesson ›</button></div>';
+  return '<nav class="trail" aria-label="Where you are"><button type="button" data-back="1">All layers</button><span>›</span><button type="button" data-back="1">Layer '+l.id+' · '+esc(l.name)+'</button><span>›</span><b>'+id+'</b></nav>'+
+    outline+pn+
     '<p class="lmeta2">Module '+(mi+1)+' of '+l.modules.length+' · '+esc(m.name)+' · lesson '+(pos+1)+' of '+m.lessons.length+' · about '+L.min+' min</p>'+
     '<h2 class="lesson-title"><span class="lnum">'+id+'</span> '+esc(L.title)+'</h2>'+
     '<p class="why"><b>Why it matters.</b> '+esc(L.why)+'</p>'+
@@ -10304,7 +10356,8 @@ function renderTabs(){
 }
 function renderView(){
   clearViz();
-  if(view&&view.type==="lesson"&&LESSONS[view.id])app.innerHTML=lessonHTML(view.id);
+  if(view&&view.type==="layer"&&LAYERS.some(function(x){return x.id===view.id;}))app.innerHTML=layerHTML(LAYERS.filter(function(x){return x.id===view.id;})[0],true,true);
+  else if(view&&view.type==="lesson"&&LESSONS[view.id])app.innerHTML=lessonHTML(view.id);
   else if(view&&view.type==="quiz"&&QUIZZES[view.id])app.innerHTML=quizHTML(view.id);
   else if(view&&view.type==="test"&&TESTS[view.layer])app.innerHTML=testHTML(view.layer);
   else{view=null;app.innerHTML=tab==="projects"?projectsHTML():tab==="teach"?teachHTML():tab==="library"?libHTML():pathHTML();}
@@ -10350,7 +10403,17 @@ document.addEventListener("click",function(e){
   var go=e.target.closest&&e.target.closest("[data-go]");
   if(go){var gp=go.getAttribute("data-go").split(":");if(!view)lastY=window.scrollY;view=gp[0]==="test"?{type:"test",layer:+gp[1]}:(gp[0]==="quiz"?{type:"quiz",id:gp[1]}:{type:"lesson",id:gp[1]});renderView();window.scrollTo(0,0);return;}
   var bk=e.target.closest&&e.target.closest("[data-back]");
-  if(bk){view=null;renderView();window.scrollTo(0,lastY);return;}
+  if(bk){
+    var lid=null;
+    if(view&&view.type==="lesson"){var lo=layerOfLesson(view.id);lid=lo&&lo.id;}
+    else if(view&&view.type==="quiz"){var fq=layerOfQuiz(view.id);lid=fq&&fq.l.id;}
+    else if(view&&view.type==="test")lid=view.layer;
+    if(lid!==null&&lid!==undefined){view={type:"layer",id:lid};renderView();window.scrollTo(0,0);}
+    else{view=null;renderView();window.scrollTo(0,lastY);}
+    return;
+  }
+  var ol=e.target.closest&&e.target.closest("[data-open-layer]");
+  if(ol){lastY=window.scrollY;view={type:"layer",id:+ol.getAttribute("data-open-layer")};renderView();window.scrollTo(0,0);return;}
   var dn=e.target.closest&&e.target.closest("[data-done]");
   if(dn){var did=dn.getAttribute("data-done");if(S.done[did])delete S.done[did];else S.done[did]=1;save();updateStats();paintDone(dn,did);return;}
   var cp=e.target.closest&&e.target.closest("[data-copy]");
